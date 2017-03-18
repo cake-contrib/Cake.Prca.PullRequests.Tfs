@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cake.Prca.PullRequests.Tfs", "Cake.Prca.PullRequests.Tfs\Cake.Prca.PullRequests.Tfs.csproj", "{CBCD817B-76A3-45D3-9A1E-C6B52D5A54DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cake.Prca.PullRequests.Tfs.Tests", "Cake.Prca.PullRequests.Tfs.Tests\Cake.Prca.PullRequests.Tfs.Tests.csproj", "{BF9BD4CA-50D0-401F-A50B-917C6F73A111}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{912FA7D8-3292-465E-BB3E-17AEDDA9693C}"
+	ProjectSection(SolutionItems) = preProject
+		..\build.ps1 = ..\build.ps1
+		..\build.sh = ..\build.sh
+		..\setup.cake = ..\setup.cake
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{389DA3A1-4340-4AB0-BACD-CCA106900894}"
+	ProjectSection(SolutionItems) = preProject
+		..\nuspec\nuget\Cake.Prca.PullRequests.Tfs.nuspec = ..\nuspec\nuget\Cake.Prca.PullRequests.Tfs.nuspec
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBCD817B-76A3-45D3-9A1E-C6B52D5A54DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBCD817B-76A3-45D3-9A1E-C6B52D5A54DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBCD817B-76A3-45D3-9A1E-C6B52D5A54DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBCD817B-76A3-45D3-9A1E-C6B52D5A54DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF9BD4CA-50D0-401F-A50B-917C6F73A111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF9BD4CA-50D0-401F-A50B-917C6F73A111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF9BD4CA-50D0-401F-A50B-917C6F73A111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF9BD4CA-50D0-401F-A50B-917C6F73A111}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{389DA3A1-4340-4AB0-BACD-CCA106900894} = {912FA7D8-3292-465E-BB3E-17AEDDA9693C}
+	EndGlobalSection
+EndGlobal
