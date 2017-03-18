@@ -64,12 +64,14 @@
             else if (!string.IsNullOrWhiteSpace(settings.SourceBranch))
             {
                 this.Log.Verbose("Read pull request for branch {0}", settings.SourceBranch);
+
                 var pullRequestSearchCriteria =
                     new GitPullRequestSearchCriteria()
                     {
                         Status = PullRequestStatus.Active,
                         SourceRefName = settings.SourceBranch
                     };
+
                 this.pullRequest =
                     this.gitClient.GetPullRequestsAsync(
                         this.repositoryDescription.ProjectName,
@@ -110,6 +112,7 @@
                     null,
                     null,
                     CancellationToken.None);
+
             var threads = request.Result;
 
             var threadList = new List<IPrcaDiscussionThread>();
@@ -362,6 +365,7 @@
                     null,
                     null,
                     CancellationToken.None);
+
             var iterations = request.Result;
 
             if (iterations == null)
@@ -370,7 +374,7 @@
             }
 
             var iterationId = iterations.Max(x => x.Id ?? -1);
-            this.Log.Verbose("Dermined iteration id: {0}", iterationId);
+            this.Log.Verbose("Determined iteration ID: {0}", iterationId);
             return iterationId;
         }
 
@@ -386,6 +390,7 @@
                     null,
                     null,
                     CancellationToken.None);
+
             var changes = request.Result;
 
             if (changes != null)

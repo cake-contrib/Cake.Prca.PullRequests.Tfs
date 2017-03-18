@@ -61,8 +61,10 @@
             {
                 thread.Properties[CommentSourcePropertyName] = value;
             }
-
-            thread.Properties.Add(CommentSourcePropertyName, value);
+            else
+            {
+                thread.Properties.Add(CommentSourcePropertyName, value);
+            }
         }
 
         /// <summary>
