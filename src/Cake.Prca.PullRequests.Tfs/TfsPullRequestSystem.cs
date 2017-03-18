@@ -15,11 +15,9 @@
     /// <summary>
     /// Class for writing issues to Team Foundation Server or Visual Studio Team Services pull requests.
     /// </summary>
-    public sealed class TfsPullRequestSystem : PullRequestSystem, IDisposable
+    public sealed class TfsPullRequestSystem : PullRequestSystem
     {
         private readonly RepositoryDescription repositoryDescription;
-        private readonly VssConnection connection;
-        private readonly GitHttpClient gitClient;
         private readonly GitPullRequest pullRequest;
 
         private readonly List<GitPullRequestCommentThread> cachedDiscussionThreads = new List<GitPullRequestCommentThread>();
@@ -44,46 +42,41 @@
                 this.repositoryDescription.ProjectName,
                 this.repositoryDescription.RepositoryName);
 
-            this.connection = new VssConnection(this.repositoryDescription.CollectionUrl, new VssCredentials());
-
-            this.gitClient = this.connection.GetClient<GitHttpClient>();
-            if (this.gitClient == null)
+            using (var gitClient = this.CreateGitClient())
             {
-                throw new PrcaException("Could not retrieve the GitHttpClient object");
-            }
+                if (settings.PullRequestId.HasValue)
+                {
+                    this.Log.Verbose("Read pull request with ID {0}", settings.PullRequestId.Value);
+                    this.pullRequest =
+                        gitClient.GetPullRequestAsync(
+                            this.repositoryDescription.ProjectName,
+                            this.repositoryDescription.RepositoryName,
+                            settings.PullRequestId.Value).Result;
+                }
+                else if (!string.IsNullOrWhiteSpace(settings.SourceBranch))
+                {
+                    this.Log.Verbose("Read pull request for branch {0}", settings.SourceBranch);
 
-            if (settings.PullRequestId.HasValue)
-            {
-                this.Log.Verbose("Read pull request with ID {0}", settings.PullRequestId.Value);
-                this.pullRequest =
-                    this.gitClient.GetPullRequestAsync(
-                        this.repositoryDescription.ProjectName,
-                        this.repositoryDescription.RepositoryName,
-                        settings.PullRequestId.Value).Result;
-            }
-            else if (!string.IsNullOrWhiteSpace(settings.SourceBranch))
-            {
-                this.Log.Verbose("Read pull request for branch {0}", settings.SourceBranch);
+                    var pullRequestSearchCriteria =
+                        new GitPullRequestSearchCriteria()
+                        {
+                            Status = PullRequestStatus.Active,
+                            SourceRefName = settings.SourceBranch
+                        };
 
-                var pullRequestSearchCriteria =
-                    new GitPullRequestSearchCriteria()
-                    {
-                        Status = PullRequestStatus.Active,
-                        SourceRefName = settings.SourceBranch
-                    };
-
-                this.pullRequest =
-                    this.gitClient.GetPullRequestsAsync(
-                        this.repositoryDescription.ProjectName,
-                        this.repositoryDescription.RepositoryName,
-                        pullRequestSearchCriteria,
-                        top: 1).Result.SingleOrDefault();
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(settings),
-                    "Either PullRequestId or SourceBranch needs to be set");
+                    this.pullRequest =
+                        gitClient.GetPullRequestsAsync(
+                            this.repositoryDescription.ProjectName,
+                            this.repositoryDescription.RepositoryName,
+                            pullRequestSearchCriteria,
+                            top: 1).Result.SingleOrDefault();
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(
+                        nameof(settings),
+                        "Either PullRequestId or SourceBranch needs to be set");
+                }
             }
 
             if (this.pullRequest == null)
@@ -104,29 +97,32 @@
         {
             this.cachedDiscussionThreads.Clear();
 
-            var request =
-                this.gitClient.GetThreadsAsync(
-                    this.pullRequest.Repository.Id,
-                    this.pullRequest.PullRequestId,
-                    null,
-                    null,
-                    null,
-                    CancellationToken.None);
-
-            var threads = request.Result;
-
-            var threadList = new List<IPrcaDiscussionThread>();
-            foreach (var thread in threads)
+            using (var gitClient = this.CreateGitClient())
             {
-                if (thread.IsCommentSource(commentSource) && thread.Status == CommentThreadStatus.Active)
-                {
-                    this.cachedDiscussionThreads.Add(thread);
-                    threadList.Add(thread.ToPrcaDiscussionThread());
-                }
-            }
+                var request =
+                    gitClient.GetThreadsAsync(
+                        this.pullRequest.Repository.Id,
+                        this.pullRequest.PullRequestId,
+                        null,
+                        null,
+                        null,
+                        CancellationToken.None);
 
-            this.Log.Verbose("Found {0} discussion thread(s)", threadList.Count);
-            return threadList;
+                var threads = request.Result;
+
+                var threadList = new List<IPrcaDiscussionThread>();
+                foreach (var thread in threads)
+                {
+                    if (thread.IsCommentSource(commentSource) && thread.Status == CommentThreadStatus.Active)
+                    {
+                        this.cachedDiscussionThreads.Add(thread);
+                        threadList.Add(thread.ToPrcaDiscussionThread());
+                    }
+                }
+
+                this.Log.Verbose("Found {0} discussion thread(s)", threadList.Count);
+                return threadList;
+            }
         }
 
         /// <inheritdoc/>
@@ -146,33 +142,36 @@
                 Version = this.pullRequest.LastMergeTargetCommit.CommitId
             };
 
-            var commitDiffs = this.gitClient.GetCommitDiffsAsync(
-                this.repositoryDescription.ProjectName,
-                this.repositoryDescription.RepositoryName,
-                true, // bool? diffCommonCommit
-                null, // int? top
-                null, // int? skip
-                baseVersionDescriptor,
-                targetVersionDescriptor,
-                null, // object userState
-                CancellationToken.None).Result;
-
-            if (!commitDiffs.ChangeCounts.Any())
+            using (var gitClient = this.CreateGitClient())
             {
-                return new List<FilePath>();
+                var commitDiffs = gitClient.GetCommitDiffsAsync(
+                    this.repositoryDescription.ProjectName,
+                    this.repositoryDescription.RepositoryName,
+                    true, // bool? diffCommonCommit
+                    null, // int? top
+                    null, // int? skip
+                    baseVersionDescriptor,
+                    targetVersionDescriptor,
+                    null, // object userState
+                    CancellationToken.None).Result;
+
+                if (!commitDiffs.ChangeCounts.Any())
+                {
+                    return new List<FilePath>();
+                }
+
+                this.Log.Verbose(
+                    "Found {0} changed file(s) in the pull request",
+                    commitDiffs.Changes.Count());
+
+                return
+                    from change in commitDiffs.Changes
+                    where
+                        change != null &&
+                        !change.Item.IsFolder
+                    select
+                        new FilePath(change.Item.Path);
             }
-
-            this.Log.Verbose(
-                "Found {0} changed file(s) in the pull request",
-                commitDiffs.Changes.Count());
-
-            return
-                from change in commitDiffs.Changes
-                where
-                    change != null &&
-                    !change.Item.IsFolder
-                select
-                    new FilePath(change.Item.Path);
         }
 
         /// <inheritdoc/>
@@ -205,13 +204,16 @@
                 Status = CommentThreadStatus.Fixed
             };
 
-            this.gitClient.UpdateThreadAsync(
-                newThread,
-                this.pullRequest.Repository.Id,
-                this.pullRequest.PullRequestId,
-                threads.Single().Id,
-                null,
-                CancellationToken.None).Wait();
+            using (var gitClient = this.CreateGitClient())
+            {
+                gitClient.UpdateThreadAsync(
+                    newThread,
+                    this.pullRequest.Repository.Id,
+                    this.pullRequest.PullRequestId,
+                    threads.Single().Id,
+                    null,
+                    CancellationToken.None).Wait();
+            }
         }
 
         /// <inheritdoc/>
@@ -220,34 +222,30 @@
             // ReSharper disable once PossibleMultipleEnumeration
             issues.NotNull(nameof(issues));
 
-            // ReSharper disable once PossibleMultipleEnumeration
-            var threads = this.CreateDiscussionThreads(issues, commentSource).ToList();
-
-            if (!threads.Any())
+            using (var gitClient = this.CreateGitClient())
             {
-                this.Log.Verbose("No threads to post");
-                return;
+                // ReSharper disable once PossibleMultipleEnumeration
+                var threads = this.CreateDiscussionThreads(gitClient, issues, commentSource).ToList();
+
+                if (!threads.Any())
+                {
+                    this.Log.Verbose("No threads to post");
+                    return;
+                }
+
+                foreach (var thread in threads)
+                {
+                    // TODO Result handling?
+                    gitClient.CreateThreadAsync(
+                        thread,
+                        this.pullRequest.Repository.Id,
+                        this.pullRequest.PullRequestId,
+                        null,
+                        CancellationToken.None).Wait();
+                }
+
+                this.Log.Information("Posted {0} discussion threads", threads.Count);
             }
-
-            foreach (var thread in threads)
-            {
-                // TODO Result handling?
-                this.gitClient.CreateThreadAsync(
-                    thread,
-                    this.pullRequest.Repository.Id,
-                    this.pullRequest.PullRequestId,
-                    null,
-                    CancellationToken.None).Wait();
-            }
-
-            this.Log.Information("Posted {0} discussion threads", threads.Count);
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            this.gitClient?.Dispose();
-            this.connection?.Dispose();
         }
 
         private static void AddCodeFlowProperties(
@@ -269,7 +267,21 @@
             properties.Add("Microsoft.VisualStudio.Services.CodeReview.ChangeTrackingId", changeTrackingId);
         }
 
+        private GitHttpClient CreateGitClient()
+        {
+            var connection = new VssConnection(this.repositoryDescription.CollectionUrl, new VssCredentials());
+
+            var gitClient = connection.GetClient<GitHttpClient>();
+            if (gitClient == null)
+            {
+                throw new PrcaException("Could not retrieve the GitHttpClient object");
+            }
+
+            return gitClient;
+        }
+
         private IEnumerable<GitPullRequestCommentThread> CreateDiscussionThreads(
+            GitHttpClient gitClient,
             IEnumerable<ICodeAnalysisIssue> issues,
             string commentSource)
         {
@@ -285,8 +297,8 @@
 
             if (this.pullRequest.CodeReviewId > 0)
             {
-                iterationId = this.GetCodeFlowLatestIterationId();
-                changes = this.GetCodeFlowChanges(iterationId);
+                iterationId = this.GetCodeFlowLatestIterationId(gitClient);
+                changes = this.GetCodeFlowChanges(gitClient, iterationId);
             }
 
             // ReSharper disable once PossibleMultipleEnumeration
@@ -356,10 +368,10 @@
             thread.SetCommentSource(commentSource);
         }
 
-        private int GetCodeFlowLatestIterationId()
+        private int GetCodeFlowLatestIterationId(GitHttpClient gitClient)
         {
             var request =
-                this.gitClient.GetPullRequestIterationsAsync(
+                gitClient.GetPullRequestIterationsAsync(
                     this.pullRequest.Repository.Id,
                     this.pullRequest.PullRequestId,
                     null,
@@ -378,10 +390,10 @@
             return iterationId;
         }
 
-        private GitPullRequestIterationChanges GetCodeFlowChanges(int iterationId)
+        private GitPullRequestIterationChanges GetCodeFlowChanges(GitHttpClient gitClient, int iterationId)
         {
             var request =
-                this.gitClient.GetPullRequestIterationChangesAsync(
+                gitClient.GetPullRequestIterationChangesAsync(
                     this.pullRequest.Repository.Id,
                     this.pullRequest.PullRequestId,
                     iterationId,
