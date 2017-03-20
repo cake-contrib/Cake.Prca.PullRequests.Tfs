@@ -170,7 +170,7 @@
                         change != null &&
                         !change.Item.IsFolder
                     select
-                        new FilePath(change.Item.Path);
+                        new FilePath(change.Item.Path.TrimStart('/'));
             }
         }
 
