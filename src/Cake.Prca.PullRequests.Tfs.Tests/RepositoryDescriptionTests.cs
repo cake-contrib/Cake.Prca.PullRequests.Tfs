@@ -54,6 +54,12 @@
             @"http://mytenant.visualstudio.com/defaultcollection",
             "myproject",
             "myrepository")]
+        [InlineData(
+            @"http://tfs.foo.com/foo/foo/_git/foo",
+            "foo",
+            @"http://tfs.foo.com/foo",
+            "foo",
+            "foo")]
         public void Should_Parse_Repo_Url(string repoUrl, string collectionName, string collectionurl, string projectName, string repositoryName)
         {
             // Given / When

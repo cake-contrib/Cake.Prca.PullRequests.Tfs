@@ -37,7 +37,7 @@
                 new Uri(
                     repoUrlString.Substring(
                         0,
-                        repoUrlString.IndexOf(this.CollectionName, StringComparison.OrdinalIgnoreCase) + this.CollectionName.Length));
+                        repoUrlString.IndexOf("/" + this.CollectionName + "/", StringComparison.OrdinalIgnoreCase) + this.CollectionName.Length + 1));
             this.ProjectName = splitFirstPart.Last();
             this.RepositoryName = splitLastPart.First();
         }
