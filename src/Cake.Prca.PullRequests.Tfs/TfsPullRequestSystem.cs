@@ -257,7 +257,7 @@
             issue.NotNull(nameof(issue));
             properties.NotNull(nameof(properties));
 
-            properties.Add("Microsoft.VisualStudio.Services.CodeReview.ItemPath", issue.AffectedFileRelativePath.ToString());
+            properties.Add("Microsoft.VisualStudio.Services.CodeReview.ItemPath", "/" + issue.AffectedFileRelativePath);
             properties.Add("Microsoft.VisualStudio.Services.CodeReview.Right.StartLine", issue.Line);
             properties.Add("Microsoft.VisualStudio.Services.CodeReview.Right.EndLine", issue.Line);
             properties.Add("Microsoft.VisualStudio.Services.CodeReview.Right.StartOffset", 0);
@@ -424,7 +424,7 @@
             changes.NotNull(nameof(changes));
             path.NotNull(nameof(path));
 
-            var change = changes.ChangeEntries.Where(x => x.Item.Path == path.ToString()).ToList();
+            var change = changes.ChangeEntries.Where(x => x.Item.Path == "/" + path.ToString()).ToList();
             if (change.Count != 1)
             {
                 this.Log.Error(
