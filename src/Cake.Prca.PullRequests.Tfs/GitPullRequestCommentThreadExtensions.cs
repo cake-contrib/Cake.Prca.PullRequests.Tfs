@@ -24,7 +24,7 @@
             return new PrcaDiscussionThread(
                 thread.Id,
                 thread.Status.ToPrcaDiscussionStatus(),
-                new FilePath(thread.ThreadContext.FilePath),
+                new FilePath(thread.ThreadContext.FilePath.TrimStart('/')),
                 thread.Comments.Select(x => x.ToPrcaDiscussionComment()))
             {
                 CommentSource = thread.GetCommentSource(),
