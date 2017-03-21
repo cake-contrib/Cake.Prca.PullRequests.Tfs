@@ -321,7 +321,10 @@
                     Content = issue.Message
                 };
 
-                this.AddThreadProperties(newThread, changes, issue, iterationId, commentSource);
+                if (!this.AddThreadProperties(newThread, changes, issue, iterationId, commentSource))
+                {
+                    continue;
+                }
 
                 newThread.Comments = new List<Comment>() { discussionComment };
                 result.Add(newThread);
@@ -330,7 +333,7 @@
             return result;
         }
 
-        private void AddThreadProperties(
+        private bool AddThreadProperties(
             GitPullRequestCommentThread thread,
             GitPullRequestIterationChanges changes,
             ICodeAnalysisIssue issue,
@@ -349,7 +352,8 @@
                     this.TryGetCodeFlowChangeTrackingId(changes, issue.AffectedFileRelativePath);
                 if (changeTrackingId < 0)
                 {
-                    return;
+                    // Don't post comment if we couldn't determine the change.
+                    return false;
                 }
 
                 AddCodeFlowProperties(issue, iterationId, changeTrackingId, properties);
@@ -366,6 +370,8 @@
 
             // Add a custom property to be able to distinguish all comments created this way.
             thread.SetCommentSource(commentSource);
+
+            return true;
         }
 
         private int GetCodeFlowLatestIterationId(GitHttpClient gitClient)
@@ -421,8 +427,8 @@
             var change = changes.ChangeEntries.Where(x => x.Item.Path == path.ToString()).ToList();
             if (change.Count != 1)
             {
-                this.Log.Warning(
-                    "Cannot post a comment for the file {0} because no changes could be found",
+                this.Log.Error(
+                    "Cannot post a comment for the file {0} because no changes could be found.",
                     path);
                 return -1;
             }
