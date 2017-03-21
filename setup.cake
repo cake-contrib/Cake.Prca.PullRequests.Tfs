@@ -6,17 +6,17 @@ BuildParameters.SetParameters(
     context: Context, 
     buildSystem: BuildSystem,
     sourceDirectoryPath: "./src",
-    title: "Cake.Prca.PrSystem.Tfs",
+    title: "Cake.Prca.PullRequests.Tfs",
     repositoryOwner: "cake-contrib",
-    repositoryName: "Cake.Prca.PrSystem.Tfs",
+    repositoryName: "Cake.Prca.PullRequests.Tfs",
     appVeyorAccountName: "cakecontrib");
 
 BuildParameters.PrintParameters(Context);
 
 ToolSettings.SetToolSettings(
     context: Context,
-    dupFinderExcludePattern: new string[] { BuildParameters.RootDirectoryPath + "/src/Cake.Prca.PrSystem.Tfs.Tests/*.cs" },
-    testCoverageFilter: "+[*]* -[xunit.*]* -[Cake.Core]* -[Cake.Testing]* -[*.Tests]* ",
+    dupFinderExcludePattern: new string[] { BuildParameters.RootDirectoryPath + "/src/Cake.Prca.PullRequests.Tfs.Tests/*.cs" },
+    testCoverageFilter: "+[*]* -[xunit.*]* -[Cake.Core]* -[Cake.Testing]* -[*.Tests]* -[Cake.Prca]*",
     testCoverageExcludeByAttribute: "*.ExcludeFromCodeCoverage*",
     testCoverageExcludeByFile: "*/*Designer.cs;*/*.g.cs;*/*.g.i.cs");
 

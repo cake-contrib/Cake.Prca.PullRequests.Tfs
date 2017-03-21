@@ -5,28 +5,28 @@ analyzer or linter to Team Foundation Server or Visual Studio Team Services pull
 the [Cake Pull Request Code Analysis Addin].
 More about Cake at http://cakebuild.net
 
-[![License](http://img.shields.io/:license-mit-blue.svg)](https://github.com/cake-contrib/Cake.Prca.PrSystem.Tfs/blob/feature/build/LICENSE)
+[![License](http://img.shields.io/:license-mit-blue.svg)](https://github.com/cake-contrib/Cake.Prca.PullRequests.Tfs/blob/feature/build/LICENSE)
 
 ## Information
 
-||Stable|Pre-release|
+| | Stable | Pre-release |
 |:--:|:--:|:--:|
-|GitHub Release|-|[![GitHub release](https://img.shields.io/github/release/cake-contrib/Cake.Prca.PrSystem.Tfs.svg)](https://github.com/cake-contrib/Cake.Prca.PrSystem.Tfs/releases/latest)|
-|NuGet|[![NuGet](https://img.shields.io/nuget/v/Cake.Prca.PrSystem.Tfs.svg)](https://www.nuget.org/packages/Cake.Prca.PrSystem.Tfs)|[![NuGet](https://img.shields.io/nuget/vpre/Cake.Prca.PrSystem.Tfs.svg)](https://www.nuget.org/packages/Cake.Prca.PrSystem.Tfs)|
+|GitHub Release|-|[![GitHub release](https://img.shields.io/github/release/cake-contrib/Cake.Prca.PullRequests.Tfs.svg)](https://github.com/cake-contrib/Cake.Prca.PullRequests.Tfs/releases/latest)|
+|NuGet|[![NuGet](https://img.shields.io/nuget/v/Cake.Prca.PullRequests.Tfs.svg)](https://www.nuget.org/packages/Cake.Prca.PullRequests.Tfs)|[![NuGet](https://img.shields.io/nuget/vpre/Cake.Prca.PullRequests.Tfs.svg)](https://www.nuget.org/packages/Cake.Prca.PullRequests.Tfs)|
 
 ## Build Status
 
 |Develop|Master|
 |:--:|:--:|
-|[![Build status](https://ci.appveyor.com/api/projects/status/xxx/branch/develop?svg=true)](https://ci.appveyor.com/project/cakecontrib/cake-prca-prsystem-tfs/branch/develop)|[![Build status](https://ci.appveyor.com/api/projects/status/xxx/branch/develop?svg=true)](https://ci.appveyor.com/project/cakecontrib/cake-prca-prsystem-tfs/branch/master)|
+|[![Build status](https://ci.appveyor.com/api/projects/status/xxx/branch/develop?svg=true)](https://ci.appveyor.com/project/cakecontrib/cake-prca-pullrequests-tfs/branch/develop)|[![Build status](https://ci.appveyor.com/api/projects/status/xxx/branch/develop?svg=true)](https://ci.appveyor.com/project/cakecontrib/cake-prca-pullrequests-tfs/branch/master)|
 
 ## Code Coverage
 
-[![Coverage Status](https://coveralls.io/repos/github/cake-contrib/Cake.Prca.PrSystem.Tfs/badge.svg?branch=develop)](https://coveralls.io/github/cake-contrib/Cake.Prca.PrSystem.Tfs?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/cake-contrib/Cake.Prca.PullRequests.Tfs/badge.svg?branch=develop)](https://coveralls.io/github/cake-contrib/Cake.Prca.PullRequests.Tfs?branch=develop)
 
 ## Quick Links
 
-- [Documentation](https://cake-contrib.github.io/Cake.Prca.PrSystem.Tfs)
+- [Documentation](https://cake-contrib.github.io/Cake.Prca.Website)
 
 ## Chat Room
 
