@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Threading;
     using Core.Diagnostics;
@@ -19,8 +18,6 @@
         private readonly TfsPullRequestSettings settings;
         private readonly RepositoryDescription repositoryDescription;
         private readonly GitPullRequest pullRequest;
-
-        private readonly List<GitPullRequestCommentThread> cachedDiscussionThreads = new List<GitPullRequestCommentThread>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TfsPullRequestSystem"/> class.
@@ -97,8 +94,6 @@
         /// <inheritdoc/>
         public override IEnumerable<IPrcaDiscussionThread> FetchActiveDiscussionThreads(string commentSource)
         {
-            this.cachedDiscussionThreads.Clear();
-
             using (var gitClient = this.CreateGitClient())
             {
                 var request =
@@ -117,7 +112,6 @@
                 {
                     if (thread.IsCommentSource(commentSource) && thread.Status == CommentThreadStatus.Active)
                     {
-                        this.cachedDiscussionThreads.Add(thread);
                         threadList.Add(thread.ToPrcaDiscussionThread());
                     }
                 }
@@ -177,44 +171,29 @@
         }
 
         /// <inheritdoc/>
-        public override void MarkThreadAsFixed(IPrcaDiscussionThread thread)
+        public override void MarkThreadsAsFixed(IEnumerable<IPrcaDiscussionThread> threads)
         {
-            thread.NotNull(nameof(thread));
-
-            var threads = this.cachedDiscussionThreads.Where(x => x.Id == thread.Id).ToList();
-
-            if (!threads.Any())
-            {
-                throw new PrcaException(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Thread with ID {0} not found",
-                        thread.Id));
-            }
-
-            if (threads.Count != 1)
-            {
-                throw new PrcaException(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Found more than one thread with ID {0}",
-                        thread.Id));
-            }
-
-            var newThread = new GitPullRequestCommentThread
-            {
-                Status = CommentThreadStatus.Fixed
-            };
+            // ReSharper disable once PossibleMultipleEnumeration
+            threads.NotNull(nameof(threads));
 
             using (var gitClient = this.CreateGitClient())
             {
-                gitClient.UpdateThreadAsync(
-                    newThread,
-                    this.pullRequest.Repository.Id,
-                    this.pullRequest.PullRequestId,
-                    threads.Single().Id,
-                    null,
-                    CancellationToken.None).Wait();
+                // ReSharper disable once PossibleMultipleEnumeration
+                foreach (var thread in threads)
+                {
+                    var newThread = new GitPullRequestCommentThread
+                    {
+                        Status = CommentThreadStatus.Fixed
+                    };
+
+                    gitClient.UpdateThreadAsync(
+                        newThread,
+                        this.pullRequest.Repository.Id,
+                        this.pullRequest.PullRequestId,
+                        thread.Id,
+                        null,
+                        CancellationToken.None).Wait();
+                }
             }
         }
 
