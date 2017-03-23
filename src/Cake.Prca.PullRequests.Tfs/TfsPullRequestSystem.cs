@@ -286,7 +286,9 @@
             }
 
             // ReSharper disable once PossibleMultipleEnumeration
-            foreach (var issue in issues)
+            // We currenty don't support issues not related to a file.
+            // See https://github.com/cake-contrib/Cake.Prca.PullRequests.Tfs/issues/19
+            foreach (var issue in issues.Where(x => x.AffectedFileRelativePath != null))
             {
                 this.Log.Information(
                     "Creating a discussion comment for the issue at line {0} from {1}",
