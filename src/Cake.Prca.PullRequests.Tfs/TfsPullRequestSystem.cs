@@ -9,7 +9,6 @@
     using Core.IO;
     using Issues;
     using Microsoft.TeamFoundation.SourceControl.WebApi;
-    using Microsoft.VisualStudio.Services.Common;
     using Microsoft.VisualStudio.Services.WebApi;
 
     /// <summary>
@@ -17,6 +16,7 @@
     /// </summary>
     public sealed class TfsPullRequestSystem : PullRequestSystem
     {
+        private readonly TfsPullRequestSettings settings;
         private readonly RepositoryDescription repositoryDescription;
         private readonly GitPullRequest pullRequest;
 
@@ -32,6 +32,8 @@
             : base(log)
         {
             settings.NotNull(nameof(settings));
+
+            this.settings = settings;
 
             this.repositoryDescription = new RepositoryDescription(settings.RepositoryUrl);
 
@@ -269,7 +271,10 @@
 
         private GitHttpClient CreateGitClient()
         {
-            var connection = new VssConnection(this.repositoryDescription.CollectionUrl, new VssCredentials());
+            var connection =
+                new VssConnection(
+                    this.repositoryDescription.CollectionUrl,
+                    this.settings.Credentials.ToVssCredentials());
 
             var gitClient = connection.GetClient<GitHttpClient>();
             if (gitClient == null)
