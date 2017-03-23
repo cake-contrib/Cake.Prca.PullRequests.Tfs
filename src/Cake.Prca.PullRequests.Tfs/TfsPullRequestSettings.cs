@@ -64,7 +64,7 @@
         public int? PullRequestId { get; private set; }
 
         /// <summary>
-        /// Gets the credetials used to authenticate against Team Foundation Server or
+        /// Gets the credentials used to authenticate against Team Foundation Server or
         /// Visual Studio Team Services.
         /// </summary>
         public IPrcaCredentials Credentials { get; private set; }
