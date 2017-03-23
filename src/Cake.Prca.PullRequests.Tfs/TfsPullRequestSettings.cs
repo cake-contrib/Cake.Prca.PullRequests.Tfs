@@ -15,13 +15,17 @@
         /// Supported URL schemes are HTTP, HTTPS and SSH.
         /// URLs using SSH scheme are converted to HTTPS.</param>
         /// <param name="sourceBranch">Branch for which the pull request is made.</param>
-        public TfsPullRequestSettings(Uri repositoryUrl, string sourceBranch)
+        /// <param name="credentials">Credentials to use to authenticate against Team Foundation Server or
+        /// Visual Studio Team Services.</param>
+        public TfsPullRequestSettings(Uri repositoryUrl, string sourceBranch, IPrcaCredentials credentials)
         {
             repositoryUrl.NotNull(nameof(repositoryUrl));
             sourceBranch.NotNullOrWhiteSpace(nameof(sourceBranch));
+            credentials.NotNull(nameof(credentials));
 
             this.RepositoryUrl = repositoryUrl;
             this.SourceBranch = sourceBranch;
+            this.Credentials = credentials;
         }
 
         /// <summary>
@@ -32,12 +36,16 @@
         /// Supported URL schemes are HTTP, HTTPS and SSH.
         /// URLs using SSH scheme are converted to HTTPS.</param>
         /// <param name="pullRequestId">ID of the pull request.</param>
-        public TfsPullRequestSettings(Uri repositoryUrl, int pullRequestId)
+        /// <param name="credentials">Credentials to use to authenticate against Team Foundation Server or
+        /// Visual Studio Team Services.</param>
+        public TfsPullRequestSettings(Uri repositoryUrl, int pullRequestId, IPrcaCredentials credentials)
         {
             repositoryUrl.NotNull(nameof(repositoryUrl));
+            credentials.NotNull(nameof(credentials));
 
             this.RepositoryUrl = repositoryUrl;
             this.PullRequestId = pullRequestId;
+            this.Credentials = credentials;
         }
 
         /// <summary>
@@ -54,5 +62,11 @@
         /// Gets the ID of the pull request.
         /// </summary>
         public int? PullRequestId { get; private set; }
+
+        /// <summary>
+        /// Gets the credetials used to authenticate against Team Foundation Server or
+        /// Visual Studio Team Services.
+        /// </summary>
+        public IPrcaCredentials Credentials { get; private set; }
     }
 }

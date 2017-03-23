@@ -73,6 +73,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\AuthenticationProviderTests.cs" />
+    <Compile Include="Authentication\PrcaAadCredentialsTests.cs" />
+    <Compile Include="Authentication\PrcaNtlmCredentialsTests.cs" />
+    <Compile Include="Authentication\PrcaOAuthCredentialsTests.cs" />
+    <Compile Include="Authentication\PrcaBasicCredentialsTests.cs" />
     <Compile Include="ExceptionAssertExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryDescriptionTests.cs" />
