@@ -11,12 +11,15 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryDescription"/> class.
         /// </summary>
-        /// <param name="repoUrl">Full URL of the repository, eg. <code>http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository</code></param>
+        /// <param name="repoUrl">Full URL of the repository,
+        /// eg. <code>http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository</code>.
+        /// Supported URL schemes are HTTP, HTTPS and SSH.
+        /// URLs using SSH scheme are converted to HTTPS.</param>
         public RepositoryDescription(Uri repoUrl)
         {
             repoUrl.NotNull(nameof(repoUrl));
 
-            var repoUrlString = repoUrl.ToString();
+            var repoUrlString = ConvertToSupportedUriScheme(repoUrl).ToString();
             var gitSeparator = new[] { "/_git/" };
             var splitPath = repoUrl.AbsolutePath.Split(gitSeparator, StringSplitOptions.None);
             if (splitPath.Length < 2)
@@ -61,5 +64,33 @@
         /// Gets the name of the Git repository.
         /// </summary>
         public string RepositoryName { get; private set; }
+
+        /// <summary>
+        /// Converts the repository URL to a supported scheme if possible.
+        /// </summary>
+        /// <param name="repoUrl">Repository URL.</param>
+        /// <returns>Repository URL with a supported scheme.</returns>
+        private static Uri ConvertToSupportedUriScheme(Uri repoUrl)
+        {
+            if (repoUrl.Scheme == Uri.UriSchemeHttp || repoUrl.Scheme == Uri.UriSchemeHttps)
+            {
+                return repoUrl;
+            }
+
+            // Convert SSH url to HTTPS
+            if (repoUrl.Scheme == "ssh")
+            {
+                var uriBuilder = new UriBuilder(repoUrl)
+                {
+                    Scheme = Uri.UriSchemeHttps,
+                    UserName = string.Empty,
+                    Password = string.Empty
+                };
+                return uriBuilder.Uri;
+            }
+
+            throw new UriFormatException(
+                $"Invalid scheme in URI {repoUrl}. Only HTTP, HTTPS and SSH are supported");
+        }
     }
 }

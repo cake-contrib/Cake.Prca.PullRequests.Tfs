@@ -18,7 +18,9 @@
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="repositoryUrl">Full URL of the Git repository,
-        /// eg. <code>http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository</code>.</param>
+        /// eg. <code>http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository</code>.
+        /// Supported URL schemes are HTTP, HTTPS and SSH.
+        /// URLs using SSH scheme are converted to HTTPS.</param>
         /// <param name="sourceBranch">Branch for which the pull request is made.</param>
         /// <returns>Object for writing issues to Team Foundation Server or Visual Studio Team Services pull request.</returns>
         /// <example>
@@ -51,7 +53,9 @@
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="repositoryUrl">Full URL of the Git repository,
-        /// eg. <code>http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository</code>.</param>
+        /// eg. <code>http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository</code>.
+        /// Supported URL schemes are HTTP, HTTPS and SSH.
+        /// URLs using SSH scheme are converted to HTTPS.</param>
         /// <param name="pullRequestId">ID of the pull request.</param>
         /// <returns>Object for writing issues to Team Foundation Server or Visual Studio Team Services pull request.</returns>
         /// <example>
