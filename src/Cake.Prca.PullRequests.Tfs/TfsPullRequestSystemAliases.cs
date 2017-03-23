@@ -28,7 +28,10 @@
         /// <code>
         /// <![CDATA[
         ///     ReportCodeAnalysisIssuesToPullRequest(
-        ///         MsBuildCodeAnalysis(@"C:\build\msbuild.log", MsBuildXmlFileLoggerFormat),
+        ///         MsBuildCodeAnalysis(
+        ///             @"C:\build\msbuild.log",
+        ///             MsBuildXmlFileLoggerFormat,
+        ///             new DirectoryPath("c:\repo")),
         ///         TfsPullRequests(new Uri("http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository"), "refs/heads/feature/myfeature"));
         /// ]]>
         /// </code>
@@ -63,7 +66,10 @@
         /// <code>
         /// <![CDATA[
         ///     ReportCodeAnalysisIssuesToPullRequest(
-        ///         MsBuildCodeAnalysis(@"C:\build\msbuild.log", MsBuildXmlFileLoggerFormat),
+        ///         MsBuildCodeAnalysis(
+        ///             @"C:\build\msbuild.log",
+        ///             MsBuildXmlFileLoggerFormat,
+        ///             new DirectoryPath("c:\repo")),
         ///         TfsPullRequests(new Uri("http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository"), 5));
         /// ]]>
         /// </code>
@@ -98,7 +104,10 @@
         ///             "refs/heads/feature/myfeature");
         ///
         ///     ReportCodeAnalysisIssuesToPullRequest(
-        ///         MsBuildCodeAnalysis(@"C:\build\msbuild.log", MsBuildXmlFileLoggerFormat),
+        ///         MsBuildCodeAnalysis(
+        ///             @"C:\build\msbuild.log",
+        ///             MsBuildXmlFileLoggerFormat,
+        ///             new DirectoryPath("c:\repo")),
         ///         TfsPullRequests(pullRequestSettings));
         /// ]]>
         /// </code>
