@@ -1,7 +1,7 @@
 ﻿namespace Cake.Prca.PullRequests.Tfs.Tests.Authentication
 {
-    using Tfs.Authentication;
     using Shouldly;
+    using Tfs.Authentication;
     using Xunit;
 
     public class AuthenticationProviderTests
@@ -94,7 +94,7 @@
             [Fact]
             public void Should_Set_User_Name()
             {
-                // Given 
+                // Given
                 const string userName = "foo";
 
                 // When
@@ -108,7 +108,7 @@
             [Fact]
             public void Should_Set_Password()
             {
-                // Given 
+                // Given
                 const string password = "bar";
 
                 // When
@@ -165,7 +165,7 @@
             [Fact]
             public void Should_Set_Personal_Access_Token()
             {
-                // Given 
+                // Given
                 const string personalAccessToken = "foo";
 
                 // When
@@ -223,7 +223,7 @@
             [Fact]
             public void Should_Set_Access_Token()
             {
-                // Given 
+                // Given
                 const string accessToken = "foo";
 
                 // When
@@ -310,7 +310,7 @@
             [Fact]
             public void Should_Set_User_Name()
             {
-                // Given 
+                // Given
                 const string userName = "foo";
 
                 // When
@@ -324,7 +324,7 @@
             [Fact]
             public void Should_Set_Password()
             {
-                // Given 
+                // Given
                 const string password = "bar";
 
                 // When
