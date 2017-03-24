@@ -347,7 +347,7 @@
                 {
                     CommentType = CommentType.System,
                     IsDeleted = false,
-                    Content = issue.Message
+                    Content = ContentProvider.GetContent(issue)
                 };
 
                 if (!this.AddThreadProperties(newThread, changes, issue, iterationId, commentSource))
