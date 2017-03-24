@@ -11,7 +11,7 @@
             public void Should_Throw_If_RepositoryUrl_For_SourceBranch_Is_Null()
             {
                 // Given / When
-                var result = Record.Exception(() => new TfsPullRequestSettings((Uri)null, "foo"));
+                var result = Record.Exception(() => new TfsPullRequestSettings(null, "foo", null));
 
                 // Then
                 result.IsArgumentNullException("repositoryUrl");
@@ -21,7 +21,7 @@
             public void Should_Throw_If_SourceBranch_Is_Null()
             {
                 // Given / When
-                var result = Record.Exception(() => new TfsPullRequestSettings(new Uri("http://example.com"), (string)null));
+                var result = Record.Exception(() => new TfsPullRequestSettings(new Uri("http://example.com"), null, null));
 
                 // Then
                 result.IsArgumentNullException("sourceBranch");
@@ -31,7 +31,7 @@
             public void Should_Throw_If_SourceBranch_Is_Empty()
             {
                 // Given / When
-                var result = Record.Exception(() => new TfsPullRequestSettings(new Uri("http://example.com"), string.Empty));
+                var result = Record.Exception(() => new TfsPullRequestSettings(new Uri("http://example.com"), string.Empty, null));
 
                 // Then
                 result.IsArgumentOutOfRangeException("sourceBranch");
@@ -41,7 +41,7 @@
             public void Should_Throw_If_SourceBranch_Is_WhiteSpace()
             {
                 // Given / When
-                var result = Record.Exception(() => new TfsPullRequestSettings(new Uri("http://example.com"), " "));
+                var result = Record.Exception(() => new TfsPullRequestSettings(new Uri("http://example.com"), " ", null));
 
                 // Then
                 result.IsArgumentOutOfRangeException("sourceBranch");
@@ -51,7 +51,7 @@
             public void Should_Throw_If_RepositoryUrl_For_PullRequestId_Is_Null()
             {
                 // Given / When
-                var result = Record.Exception(() => new TfsPullRequestSettings((Uri)null, 0));
+                var result = Record.Exception(() => new TfsPullRequestSettings(null, 0, null));
 
                 // Then
                 result.IsArgumentNullException("repositoryUrl");

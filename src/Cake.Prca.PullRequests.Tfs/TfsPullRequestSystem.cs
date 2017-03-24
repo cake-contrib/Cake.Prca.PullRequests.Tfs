@@ -2,14 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Threading;
     using Core.Diagnostics;
     using Core.IO;
     using Issues;
     using Microsoft.TeamFoundation.SourceControl.WebApi;
-    using Microsoft.VisualStudio.Services.Common;
     using Microsoft.VisualStudio.Services.WebApi;
 
     /// <summary>
@@ -17,10 +15,9 @@
     /// </summary>
     public sealed class TfsPullRequestSystem : PullRequestSystem
     {
+        private readonly TfsPullRequestSettings settings;
         private readonly RepositoryDescription repositoryDescription;
         private readonly GitPullRequest pullRequest;
-
-        private readonly List<GitPullRequestCommentThread> cachedDiscussionThreads = new List<GitPullRequestCommentThread>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TfsPullRequestSystem"/> class.
@@ -32,6 +29,8 @@
             : base(log)
         {
             settings.NotNull(nameof(settings));
+
+            this.settings = settings;
 
             this.repositoryDescription = new RepositoryDescription(settings.RepositoryUrl);
 
@@ -95,8 +94,6 @@
         /// <inheritdoc/>
         public override IEnumerable<IPrcaDiscussionThread> FetchActiveDiscussionThreads(string commentSource)
         {
-            this.cachedDiscussionThreads.Clear();
-
             using (var gitClient = this.CreateGitClient())
             {
                 var request =
@@ -115,7 +112,6 @@
                 {
                     if (thread.IsCommentSource(commentSource) && thread.Status == CommentThreadStatus.Active)
                     {
-                        this.cachedDiscussionThreads.Add(thread);
                         threadList.Add(thread.ToPrcaDiscussionThread());
                     }
                 }
@@ -175,44 +171,29 @@
         }
 
         /// <inheritdoc/>
-        public override void MarkThreadAsFixed(IPrcaDiscussionThread thread)
+        public override void MarkThreadsAsFixed(IEnumerable<IPrcaDiscussionThread> threads)
         {
-            thread.NotNull(nameof(thread));
-
-            var threads = this.cachedDiscussionThreads.Where(x => x.Id == thread.Id).ToList();
-
-            if (!threads.Any())
-            {
-                throw new PrcaException(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Thread with ID {0} not found",
-                        thread.Id));
-            }
-
-            if (threads.Count != 1)
-            {
-                throw new PrcaException(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Found more than one thread with ID {0}",
-                        thread.Id));
-            }
-
-            var newThread = new GitPullRequestCommentThread
-            {
-                Status = CommentThreadStatus.Fixed
-            };
+            // ReSharper disable once PossibleMultipleEnumeration
+            threads.NotNull(nameof(threads));
 
             using (var gitClient = this.CreateGitClient())
             {
-                gitClient.UpdateThreadAsync(
-                    newThread,
-                    this.pullRequest.Repository.Id,
-                    this.pullRequest.PullRequestId,
-                    threads.Single().Id,
-                    null,
-                    CancellationToken.None).Wait();
+                // ReSharper disable once PossibleMultipleEnumeration
+                foreach (var thread in threads)
+                {
+                    var newThread = new GitPullRequestCommentThread
+                    {
+                        Status = CommentThreadStatus.Fixed
+                    };
+
+                    gitClient.UpdateThreadAsync(
+                        newThread,
+                        this.pullRequest.Repository.Id,
+                        this.pullRequest.PullRequestId,
+                        thread.Id,
+                        null,
+                        CancellationToken.None).Wait();
+                }
             }
         }
 
@@ -235,7 +216,6 @@
 
                 foreach (var thread in threads)
                 {
-                    // TODO Result handling?
                     gitClient.CreateThreadAsync(
                         thread,
                         this.pullRequest.Repository.Id,
@@ -269,7 +249,10 @@
 
         private GitHttpClient CreateGitClient()
         {
-            var connection = new VssConnection(this.repositoryDescription.CollectionUrl, new VssCredentials());
+            var connection =
+                new VssConnection(
+                    this.repositoryDescription.CollectionUrl,
+                    this.settings.Credentials.ToVssCredentials());
 
             var gitClient = connection.GetClient<GitHttpClient>();
             if (gitClient == null)
@@ -302,7 +285,9 @@
             }
 
             // ReSharper disable once PossibleMultipleEnumeration
-            foreach (var issue in issues)
+            // We currenty don't support issues not related to a file.
+            // See https://github.com/cake-contrib/Cake.Prca.PullRequests.Tfs/issues/19
+            foreach (var issue in issues.Where(x => x.AffectedFileRelativePath != null))
             {
                 this.Log.Information(
                     "Creating a discussion comment for the issue at line {0} from {1}",
@@ -326,7 +311,7 @@
                     continue;
                 }
 
-                newThread.Comments = new List<Comment>() { discussionComment };
+                newThread.Comments = new List<Comment> { discussionComment };
                 result.Add(newThread);
             }
 
