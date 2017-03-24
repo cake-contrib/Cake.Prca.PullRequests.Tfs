@@ -216,7 +216,6 @@
 
                 foreach (var thread in threads)
                 {
-                    // TODO Result handling?
                     gitClient.CreateThreadAsync(
                         thread,
                         this.pullRequest.Repository.Id,
@@ -312,7 +311,7 @@
                     continue;
                 }
 
-                newThread.Comments = new List<Comment>() { discussionComment };
+                newThread.Comments = new List<Comment> { discussionComment };
                 result.Add(newThread);
             }
 

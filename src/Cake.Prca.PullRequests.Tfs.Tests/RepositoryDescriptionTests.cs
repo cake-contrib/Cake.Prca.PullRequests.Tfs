@@ -22,8 +22,7 @@
         public void Should_Throw_If_No_Valid_Url(string repoUrl, string expectedMessage)
         {
             // Given / When
-            RepositoryDescription foo;
-            var result = Record.Exception(() => foo = new RepositoryDescription(new Uri(repoUrl)));
+            var result = Record.Exception(() => new RepositoryDescription(new Uri(repoUrl)));
 
             // Then
             result.IsUriFormatExceptionException(expectedMessage);
