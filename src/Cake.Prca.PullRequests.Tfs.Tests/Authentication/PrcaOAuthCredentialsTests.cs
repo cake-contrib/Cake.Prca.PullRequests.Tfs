@@ -12,7 +12,7 @@
             public void Should_Throw_If_Access_Token_Is_Null()
             {
                 // Given / When
-                var result = Record.Exception(() => new PrcaOAuthCredentials(null));
+                var result = Record.Exception(() => new TfsOAuthCredentials(null));
 
                 // Then
                 result.IsArgumentNullException("accessToken");
@@ -22,7 +22,7 @@
             public void Should_Throw_If_Access_Token_Is_Empty()
             {
                 // Given / When
-                var result = Record.Exception(() => new PrcaOAuthCredentials(string.Empty));
+                var result = Record.Exception(() => new TfsOAuthCredentials(string.Empty));
 
                 // Then
                 result.IsArgumentOutOfRangeException("accessToken");
@@ -32,7 +32,7 @@
             public void Should_Throw_If_Access_Token_Is_WhiteSpace()
             {
                 // Given / When
-                var result = Record.Exception(() => new PrcaOAuthCredentials(" "));
+                var result = Record.Exception(() => new TfsOAuthCredentials(" "));
 
                 // Then
                 result.IsArgumentOutOfRangeException("accessToken");
@@ -45,7 +45,7 @@
                 const string accessToken = "foo";
 
                 // When
-                var credentials = new PrcaOAuthCredentials(accessToken);
+                var credentials = new TfsOAuthCredentials(accessToken);
 
                 // Then
                 credentials.AccessToken.ShouldBe(accessToken);

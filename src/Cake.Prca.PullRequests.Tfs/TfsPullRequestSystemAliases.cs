@@ -40,7 +40,7 @@
         /// <returns>Credentials for basic authentication.</returns>
         [CakeMethodAlias]
         [CakeAliasCategory(CakeAliasConstants.PullRequestSystemCakeAliasCategory)]
-        public static IPrcaCredentials PrcaAuthenticationBasic(
+        public static IPrcaCredentials TfsAuthenticationBasic(
             this ICakeContext context,
             string userName,
             string password)
@@ -61,7 +61,7 @@
         /// <returns>Credentials for authentication with a personal access token.</returns>
         [CakeMethodAlias]
         [CakeAliasCategory(CakeAliasConstants.PullRequestSystemCakeAliasCategory)]
-        public static IPrcaCredentials PrcaAuthenticationPersonalAccessToken(
+        public static IPrcaCredentials TfsAuthenticationPersonalAccessToken(
             this ICakeContext context,
             string personalAccessToken)
         {
@@ -80,7 +80,7 @@
         /// <returns>Credentials for OAuth authentication.</returns>
         [CakeMethodAlias]
         [CakeAliasCategory(CakeAliasConstants.PullRequestSystemCakeAliasCategory)]
-        public static IPrcaCredentials PrcaAuthenticationOAuth(
+        public static IPrcaCredentials TfsAuthenticationOAuth(
             this ICakeContext context,
             string accessToken)
         {
@@ -99,7 +99,7 @@
         /// <returns>Credentials for authentication with an Azure Active Directory.</returns>
         [CakeMethodAlias]
         [CakeAliasCategory(CakeAliasConstants.PullRequestSystemCakeAliasCategory)]
-        public static IPrcaCredentials PrcaAuthenticationAzureActiveDirectory(
+        public static IPrcaCredentials TfsAuthenticationAzureActiveDirectory(
             this ICakeContext context,
             string userName,
             string password)
@@ -137,7 +137,7 @@
         ///         TfsPullRequests(
         ///             new Uri("http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository"),
         ///             "refs/heads/feature/myfeature",
-        ///             PrcaAuthenticationNtlm()),
+        ///             TfsAuthenticationNtlm()),
         ///         repoRoot);
         /// ]]>
         /// </code>
@@ -184,7 +184,7 @@
         ///         TfsPullRequests(
         ///             new Uri("http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository"),
         ///             5,
-        ///             PrcaAuthenticationNtlm()),
+        ///             TfsAuthenticationNtlm()),
         ///         repoRoot);
         /// ]]>
         /// </code>
@@ -220,7 +220,7 @@
         ///         new TfsPullRequestSettings(
         ///             new Uri("http://myserver:8080/tfs/defaultcollection/myproject/_git/myrepository"),
         ///             "refs/heads/feature/myfeature",
-        ///             PrcaAuthenticationNtlm());
+        ///             TfsAuthenticationNtlm());
         ///
         ///     ReportCodeAnalysisIssuesToPullRequest(
         ///         MsBuildCodeAnalysis(

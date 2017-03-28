@@ -3,14 +3,14 @@
     /// <summary>
     /// Credentials for authentication with an Azure Active Directory.
     /// </summary>
-    public class PrcaAadCredentials : PrcaBasicCredentials
+    public class TfsAadCredentials : TfsBasicCredentials
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PrcaAadCredentials"/> class.
+        /// Initializes a new instance of the <see cref="TfsAadCredentials"/> class.
         /// </summary>
         /// <param name="userName">User name.</param>
         /// <param name="password">Password.</param>
-        public PrcaAadCredentials(string userName, string password)
+        public TfsAadCredentials(string userName, string password)
             : base(userName, password)
         {
         }
