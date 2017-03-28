@@ -80,7 +80,7 @@
 
             if (this.pullRequest == null)
             {
-                if (this.settings.ThrowExceptionIfPulLRequestDoesNotExist)
+                if (this.settings.ThrowExceptionIfPullRequestDoesNotExist)
                 {
                     throw new PrcaException("Could not find pull request");
                 }
@@ -275,7 +275,7 @@
 
         /// <summary>
         /// Validates if a pull request could be found.
-        /// Depending on <see cref="TfsPullRequestSettings.ThrowExceptionIfPulLRequestDoesNotExist"/>
+        /// Depending on <see cref="TfsPullRequestSettings.ThrowExceptionIfPullRequestDoesNotExist"/>
         /// the pull request instance can be null for subsequent calls.
         /// </summary>
         /// <returns>True if a valid pull request instance exists.</returns>

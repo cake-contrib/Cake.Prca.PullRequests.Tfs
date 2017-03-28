@@ -73,6 +73,6 @@
         /// Gets or sets a value indicating whether an exception should be thrown if no
         /// pull request exists or not.
         /// </summary>
-        public bool ThrowExceptionIfPulLRequestDoesNotExist { get; set; } = true;
+        public bool ThrowExceptionIfPullRequestDoesNotExist { get; set; } = true;
     }
 }
