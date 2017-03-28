@@ -18,7 +18,7 @@ More about Cake at http://cakebuild.net
 
 |Develop|Master|
 |:--:|:--:|
-|[![Build status](https://ci.appveyor.com/api/projects/status/xxx/branch/develop?svg=true)](https://ci.appveyor.com/project/cakecontrib/cake-prca-pullrequests-tfs/branch/develop)|[![Build status](https://ci.appveyor.com/api/projects/status/xxx/branch/develop?svg=true)](https://ci.appveyor.com/project/cakecontrib/cake-prca-pullrequests-tfs/branch/master)|
+|[![Build status](https://ci.appveyor.com/api/projects/status/dkrcp7kxms885j3m/branch/develop?svg=true)](https://ci.appveyor.com/project/cakecontrib/cake-prca-pullrequests-tfs/branch/develop)|[![Build status](https://ci.appveyor.com/api/projects/status/dkrcp7kxms885j3m/branch/develop?svg=true)](https://ci.appveyor.com/project/cakecontrib/cake-prca-pullrequests-tfs/branch/master)|
 
 ## Code Coverage
 
