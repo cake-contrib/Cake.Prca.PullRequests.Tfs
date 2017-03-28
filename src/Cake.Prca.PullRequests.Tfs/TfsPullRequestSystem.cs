@@ -80,7 +80,13 @@
 
             if (this.pullRequest == null)
             {
-                throw new PrcaException("Could not find pull request");
+                if (this.settings.ThrowExceptionIfPulLRequestDoesNotExist)
+                {
+                    throw new PrcaException("Could not find pull request");
+                }
+
+                this.Log.Warning("Could not find pull request");
+                return;
             }
 
             this.Log.Verbose(
@@ -94,6 +100,11 @@
         /// <inheritdoc/>
         public override IEnumerable<IPrcaDiscussionThread> FetchActiveDiscussionThreads(string commentSource)
         {
+            if (!this.ValidatePullRequest())
+            {
+                return new List<IPrcaDiscussionThread>();
+            }
+
             using (var gitClient = this.CreateGitClient())
             {
                 var request =
@@ -124,6 +135,11 @@
         /// <inheritdoc/>
         public override IEnumerable<FilePath> GetModifiedFilesInPullRequest()
         {
+            if (!this.ValidatePullRequest())
+            {
+                return new List<FilePath>();
+            }
+
             this.Log.Verbose("Computing the list of files changed in this pull request...");
 
             var targetVersionDescriptor = new GitTargetVersionDescriptor
@@ -176,6 +192,11 @@
             // ReSharper disable once PossibleMultipleEnumeration
             threads.NotNull(nameof(threads));
 
+            if (!this.ValidatePullRequest())
+            {
+                return;
+            }
+
             using (var gitClient = this.CreateGitClient())
             {
                 // ReSharper disable once PossibleMultipleEnumeration
@@ -202,6 +223,11 @@
         {
             // ReSharper disable once PossibleMultipleEnumeration
             issues.NotNull(nameof(issues));
+
+            if (!this.ValidatePullRequest())
+            {
+                return;
+            }
 
             using (var gitClient = this.CreateGitClient())
             {
@@ -245,6 +271,23 @@
             properties.Add("Microsoft.VisualStudio.Services.CodeReview.FirstComparingIteration", iterationId);
             properties.Add("Microsoft.VisualStudio.Services.CodeReview.SecondComparingIteration", iterationId);
             properties.Add("Microsoft.VisualStudio.Services.CodeReview.ChangeTrackingId", changeTrackingId);
+        }
+
+        /// <summary>
+        /// Validates if a pull request could be found.
+        /// Depending on <see cref="TfsPullRequestSettings.ThrowExceptionIfPulLRequestDoesNotExist"/>
+        /// the pull request instance can be null for subsequent calls.
+        /// </summary>
+        /// <returns>True if a valid pull request instance exists.</returns>
+        private bool ValidatePullRequest()
+        {
+            if (this.pullRequest != null)
+            {
+                return true;
+            }
+
+            this.Log.Verbose("Skipping, since no pull request instance could be found.");
+            return false;
         }
 
         private GitHttpClient CreateGitClient()
