@@ -9,6 +9,7 @@
     using Issues;
     using Microsoft.TeamFoundation.SourceControl.WebApi;
     using Microsoft.VisualStudio.Services.WebApi;
+    using TfsUrlParser;
 
     /// <summary>
     /// Class for writing issues to Team Foundation Server or Visual Studio Team Services pull requests.
