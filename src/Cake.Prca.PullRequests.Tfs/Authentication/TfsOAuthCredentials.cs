@@ -3,13 +3,13 @@
     /// <summary>
     /// Credentials for OAuth authentication.
     /// </summary>
-    public class PrcaOAuthCredentials : IPrcaCredentials
+    public class TfsOAuthCredentials : IPrcaCredentials
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PrcaOAuthCredentials"/> class.
+        /// Initializes a new instance of the <see cref="TfsOAuthCredentials"/> class.
         /// </summary>
         /// <param name="accessToken">OAuth access token.</param>
-        public PrcaOAuthCredentials(string accessToken)
+        public TfsOAuthCredentials(string accessToken)
         {
             accessToken.NotNullOrWhiteSpace(nameof(accessToken));
 

@@ -150,15 +150,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authentication\AuthenticationProvider.cs" />
-    <Compile Include="Authentication\PrcaAadCredentials.cs" />
-    <Compile Include="Authentication\PrcaOAuthCredentials.cs" />
-    <Compile Include="Authentication\PrcaBasicCredentials.cs" />
+    <Compile Include="Authentication\TfsAadCredentials.cs" />
+    <Compile Include="Authentication\TfsOAuthCredentials.cs" />
+    <Compile Include="Authentication\TfsBasicCredentials.cs" />
     <Compile Include="CommentExtensions.cs" />
     <Compile Include="CommentThreadStatusExtensions.cs" />
     <Compile Include="GitPullRequestCommentThreadExtensions.cs" />
     <Compile Include="IPrcaCredentials.cs" />
     <Compile Include="PrcaCredentialsExtensions.cs" />
-    <Compile Include="Authentication\PrcaNtlmCredentials.cs" />
+    <Compile Include="Authentication\TfsNtlmCredentials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryDescription.cs" />
     <Compile Include="TfsPullRequestSettings.cs" />
