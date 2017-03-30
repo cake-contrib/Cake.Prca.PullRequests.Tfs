@@ -159,6 +159,7 @@
     <Compile Include="Authentication\TfsBasicCredentials.cs" />
     <Compile Include="CommentExtensions.cs" />
     <Compile Include="CommentThreadStatusExtensions.cs" />
+    <Compile Include="ContentProvider.cs" />
     <Compile Include="GitPullRequestCommentThreadExtensions.cs" />
     <Compile Include="IPrcaCredentials.cs" />
     <Compile Include="PrcaCredentialsExtensions.cs" />

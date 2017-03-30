@@ -122,10 +122,19 @@
                 var threadList = new List<IPrcaDiscussionThread>();
                 foreach (var thread in threads)
                 {
-                    if (thread.IsCommentSource(commentSource) && thread.Status == CommentThreadStatus.Active)
+                    if (!thread.IsCommentSource(commentSource) || thread.Status != CommentThreadStatus.Active)
                     {
-                        threadList.Add(thread.ToPrcaDiscussionThread());
+                        continue;
                     }
+
+                    var prcaThread = thread.ToPrcaDiscussionThread();
+
+                    // Assuming that the first comment is the one written by this addin, we replace the content
+                    // containing additional formatting done by this addin with the original issue message to
+                    // allow Cake.Prca to do a proper comparison to find out which issues already were posted.
+                    prcaThread.Comments.First().Content = thread.GetIssueMessage();
+
+                    threadList.Add(prcaThread);
                 }
 
                 this.Log.Verbose("Found {0} discussion thread(s)", threadList.Count);
@@ -347,7 +356,7 @@
                 {
                     CommentType = CommentType.System,
                     IsDeleted = false,
-                    Content = issue.Message
+                    Content = ContentProvider.GetContent(issue)
                 };
 
                 if (!this.AddThreadProperties(newThread, changes, issue, iterationId, commentSource))
@@ -399,6 +408,10 @@
 
             // Add a custom property to be able to distinguish all comments created this way.
             thread.SetCommentSource(commentSource);
+
+            // Add a custom property to be able to return issue message from existing threads,
+            // without any formatting done by this addin, back to Cake.Prca.
+            thread.SetIssueMessage(issue.Message);
 
             return true;
         }
