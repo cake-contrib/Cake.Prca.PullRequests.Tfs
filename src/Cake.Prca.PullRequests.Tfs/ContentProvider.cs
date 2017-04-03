@@ -15,10 +15,18 @@
         public static string GetContent(ICodeAnalysisIssue issue)
         {
             var result = issue.Message;
-            if (!string.IsNullOrWhiteSpace(issue.Rule))
+            if (string.IsNullOrWhiteSpace(issue.Rule))
             {
-                result = $"{issue.Rule}: {result}";
+                return result;
             }
+
+            var ruleContent = issue.Rule;
+            if (issue.RuleUrl != null)
+            {
+                ruleContent = $"[{issue.Rule}]({issue.RuleUrl})";
+            }
+
+            result = $"{ruleContent}: {result}";
 
             return result;
         }
