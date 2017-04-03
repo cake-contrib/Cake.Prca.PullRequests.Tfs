@@ -99,7 +99,7 @@
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<IPrcaDiscussionThread> FetchActiveDiscussionThreads(string commentSource)
+        protected override IEnumerable<IPrcaDiscussionThread> InternalFetchActiveDiscussionThreads(string commentSource)
         {
             if (!this.ValidatePullRequest())
             {
@@ -143,7 +143,7 @@
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<FilePath> GetModifiedFilesInPullRequest()
+        protected override IEnumerable<FilePath> InternalGetModifiedFilesInPullRequest()
         {
             if (!this.ValidatePullRequest())
             {
@@ -197,7 +197,7 @@
         }
 
         /// <inheritdoc/>
-        public override void MarkThreadsAsFixed(IEnumerable<IPrcaDiscussionThread> threads)
+        protected override void InternalMarkThreadsAsFixed(IEnumerable<IPrcaDiscussionThread> threads)
         {
             // ReSharper disable once PossibleMultipleEnumeration
             threads.NotNull(nameof(threads));
@@ -229,7 +229,7 @@
         }
 
         /// <inheritdoc/>
-        public override void PostDiscussionThreads(IEnumerable<ICodeAnalysisIssue> issues, string commentSource)
+        protected override void InternalPostDiscussionThreads(IEnumerable<ICodeAnalysisIssue> issues, string commentSource)
         {
             // ReSharper disable once PossibleMultipleEnumeration
             issues.NotNull(nameof(issues));

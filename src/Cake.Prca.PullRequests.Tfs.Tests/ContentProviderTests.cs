@@ -39,7 +39,7 @@
                 string expectedResult)
             {
                 // Given
-                var issue = new CodeAnalysisIssue(filePath, line, message, priority, rule);
+                var issue = new CodeAnalysisIssue(filePath, line, message, priority, rule, null, "Foo");
 
                 // When
                 var result = ContentProvider.GetContent(issue);
