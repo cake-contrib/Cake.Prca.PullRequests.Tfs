@@ -99,6 +99,12 @@
         }
 
         /// <inheritdoc/>
+        public override PrcaCommentFormat GetPreferredCommentFormat()
+        {
+            return PrcaCommentFormat.Markdown;
+        }
+
+        /// <inheritdoc/>
         protected override IEnumerable<IPrcaDiscussionThread> InternalFetchActiveDiscussionThreads(string commentSource)
         {
             if (!this.ValidatePullRequest())
