@@ -21,7 +21,7 @@
         /// <returns>Credentials for integrated / NTLM authentication</returns>
         [CakeMethodAlias]
         [CakeAliasCategory(CakeAliasConstants.PullRequestSystemCakeAliasCategory)]
-        public static IPrcaCredentials PrcaAuthenticationNtlm(
+        public static IPrcaCredentials TfsAuthenticationNtlm(
             this ICakeContext context)
         {
             context.NotNull(nameof(context));
