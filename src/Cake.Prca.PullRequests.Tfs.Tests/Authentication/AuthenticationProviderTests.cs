@@ -15,7 +15,7 @@
                 var credentials = AuthenticationProvider.AuthenticationNtlm();
 
                 // Then
-                credentials.ShouldBeOfType<PrcaNtlmCredentials>();
+                credentials.ShouldBeOfType<TfsNtlmCredentials>();
             }
         }
 
@@ -88,7 +88,7 @@
                 var credentials = AuthenticationProvider.AuthenticationBasic("foo", "bar");
 
                 // Then
-                credentials.ShouldBeOfType<PrcaBasicCredentials>();
+                credentials.ShouldBeOfType<TfsBasicCredentials>();
             }
 
             [Fact]
@@ -101,8 +101,8 @@
                 var credentials = AuthenticationProvider.AuthenticationBasic(userName, "bar");
 
                 // Then
-                credentials.ShouldBeOfType<PrcaBasicCredentials>();
-                ((PrcaBasicCredentials)credentials).UserName.ShouldBe(userName);
+                credentials.ShouldBeOfType<TfsBasicCredentials>();
+                ((TfsBasicCredentials)credentials).UserName.ShouldBe(userName);
             }
 
             [Fact]
@@ -115,8 +115,8 @@
                 var credentials = AuthenticationProvider.AuthenticationBasic("foo", password);
 
                 // Then
-                credentials.ShouldBeOfType<PrcaBasicCredentials>();
-                ((PrcaBasicCredentials)credentials).Password.ShouldBe(password);
+                credentials.ShouldBeOfType<TfsBasicCredentials>();
+                ((TfsBasicCredentials)credentials).Password.ShouldBe(password);
             }
         }
 
@@ -159,7 +159,7 @@
                 var credentials = AuthenticationProvider.AuthenticationPersonalAccessToken("foo");
 
                 // Then
-                credentials.ShouldBeOfType<PrcaBasicCredentials>();
+                credentials.ShouldBeOfType<TfsBasicCredentials>();
             }
 
             [Fact]
@@ -172,9 +172,9 @@
                 var credentials = AuthenticationProvider.AuthenticationPersonalAccessToken(personalAccessToken);
 
                 // Then
-                credentials.ShouldBeOfType<PrcaBasicCredentials>();
-                ((PrcaBasicCredentials)credentials).UserName.ShouldBe(string.Empty);
-                ((PrcaBasicCredentials)credentials).Password.ShouldBe(personalAccessToken);
+                credentials.ShouldBeOfType<TfsBasicCredentials>();
+                ((TfsBasicCredentials)credentials).UserName.ShouldBe(string.Empty);
+                ((TfsBasicCredentials)credentials).Password.ShouldBe(personalAccessToken);
             }
         }
 
@@ -217,7 +217,7 @@
                 var credentials = AuthenticationProvider.AuthenticationOAuth("foo");
 
                 // Then
-                credentials.ShouldBeOfType<PrcaOAuthCredentials>();
+                credentials.ShouldBeOfType<TfsOAuthCredentials>();
             }
 
             [Fact]
@@ -230,8 +230,8 @@
                 var credentials = AuthenticationProvider.AuthenticationOAuth(accessToken);
 
                 // Then
-                credentials.ShouldBeOfType<PrcaOAuthCredentials>();
-                ((PrcaOAuthCredentials)credentials).AccessToken.ShouldBe(accessToken);
+                credentials.ShouldBeOfType<TfsOAuthCredentials>();
+                ((TfsOAuthCredentials)credentials).AccessToken.ShouldBe(accessToken);
             }
         }
 
@@ -304,7 +304,7 @@
                 var credentials = AuthenticationProvider.AuthenticationAzureActiveDirectory("foo", "bar");
 
                 // Then
-                credentials.ShouldBeOfType<PrcaAadCredentials>();
+                credentials.ShouldBeOfType<TfsAadCredentials>();
             }
 
             [Fact]
@@ -317,8 +317,8 @@
                 var credentials = AuthenticationProvider.AuthenticationAzureActiveDirectory(userName, "bar");
 
                 // Then
-                credentials.ShouldBeOfType<PrcaAadCredentials>();
-                ((PrcaAadCredentials)credentials).UserName.ShouldBe(userName);
+                credentials.ShouldBeOfType<TfsAadCredentials>();
+                ((TfsAadCredentials)credentials).UserName.ShouldBe(userName);
             }
 
             [Fact]
@@ -331,8 +331,8 @@
                 var credentials = AuthenticationProvider.AuthenticationAzureActiveDirectory("foo", password);
 
                 // Then
-                credentials.ShouldBeOfType<PrcaAadCredentials>();
-                ((PrcaAadCredentials)credentials).Password.ShouldBe(password);
+                credentials.ShouldBeOfType<TfsAadCredentials>();
+                ((TfsAadCredentials)credentials).Password.ShouldBe(password);
             }
         }
     }

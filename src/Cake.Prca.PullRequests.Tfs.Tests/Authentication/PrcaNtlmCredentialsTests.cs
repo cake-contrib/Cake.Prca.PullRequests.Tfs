@@ -12,10 +12,10 @@
             public void Should_Not_Throw()
             {
                 // Given / When
-                var credentials = new PrcaNtlmCredentials();
+                var credentials = new TfsNtlmCredentials();
 
                 // Then
-                credentials.ShouldBeOfType<PrcaNtlmCredentials>();
+                credentials.ShouldBeOfType<TfsNtlmCredentials>();
             }
         }
     }

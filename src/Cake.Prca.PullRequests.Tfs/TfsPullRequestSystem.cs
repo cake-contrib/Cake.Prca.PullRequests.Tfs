@@ -9,6 +9,7 @@
     using Issues;
     using Microsoft.TeamFoundation.SourceControl.WebApi;
     using Microsoft.VisualStudio.Services.WebApi;
+    using TfsUrlParser;
 
     /// <summary>
     /// Class for writing issues to Team Foundation Server or Visual Studio Team Services pull requests.
@@ -80,7 +81,7 @@
 
             if (this.pullRequest == null)
             {
-                if (this.settings.ThrowExceptionIfPulLRequestDoesNotExist)
+                if (this.settings.ThrowExceptionIfPullRequestDoesNotExist)
                 {
                     throw new PrcaException("Could not find pull request");
                 }
@@ -98,7 +99,13 @@
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<IPrcaDiscussionThread> FetchActiveDiscussionThreads(string commentSource)
+        public override PrcaCommentFormat GetPreferredCommentFormat()
+        {
+            return PrcaCommentFormat.Markdown;
+        }
+
+        /// <inheritdoc/>
+        protected override IEnumerable<IPrcaDiscussionThread> InternalFetchActiveDiscussionThreads(string commentSource)
         {
             if (!this.ValidatePullRequest())
             {
@@ -121,10 +128,19 @@
                 var threadList = new List<IPrcaDiscussionThread>();
                 foreach (var thread in threads)
                 {
-                    if (thread.IsCommentSource(commentSource) && thread.Status == CommentThreadStatus.Active)
+                    if (!thread.IsCommentSource(commentSource) || thread.Status != CommentThreadStatus.Active)
                     {
-                        threadList.Add(thread.ToPrcaDiscussionThread());
+                        continue;
                     }
+
+                    var prcaThread = thread.ToPrcaDiscussionThread();
+
+                    // Assuming that the first comment is the one written by this addin, we replace the content
+                    // containing additional formatting done by this addin with the original issue message to
+                    // allow Cake.Prca to do a proper comparison to find out which issues already were posted.
+                    prcaThread.Comments.First().Content = thread.GetIssueMessage();
+
+                    threadList.Add(prcaThread);
                 }
 
                 this.Log.Verbose("Found {0} discussion thread(s)", threadList.Count);
@@ -133,7 +149,7 @@
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<FilePath> GetModifiedFilesInPullRequest()
+        protected override IEnumerable<FilePath> InternalGetModifiedFilesInPullRequest()
         {
             if (!this.ValidatePullRequest())
             {
@@ -187,7 +203,7 @@
         }
 
         /// <inheritdoc/>
-        public override void MarkThreadsAsFixed(IEnumerable<IPrcaDiscussionThread> threads)
+        protected override void InternalMarkThreadsAsFixed(IEnumerable<IPrcaDiscussionThread> threads)
         {
             // ReSharper disable once PossibleMultipleEnumeration
             threads.NotNull(nameof(threads));
@@ -219,7 +235,7 @@
         }
 
         /// <inheritdoc/>
-        public override void PostDiscussionThreads(IEnumerable<ICodeAnalysisIssue> issues, string commentSource)
+        protected override void InternalPostDiscussionThreads(IEnumerable<ICodeAnalysisIssue> issues, string commentSource)
         {
             // ReSharper disable once PossibleMultipleEnumeration
             issues.NotNull(nameof(issues));
@@ -275,7 +291,7 @@
 
         /// <summary>
         /// Validates if a pull request could be found.
-        /// Depending on <see cref="TfsPullRequestSettings.ThrowExceptionIfPulLRequestDoesNotExist"/>
+        /// Depending on <see cref="TfsPullRequestSettings.ThrowExceptionIfPullRequestDoesNotExist"/>
         /// the pull request instance can be null for subsequent calls.
         /// </summary>
         /// <returns>True if a valid pull request instance exists.</returns>
@@ -346,7 +362,7 @@
                 {
                     CommentType = CommentType.System,
                     IsDeleted = false,
-                    Content = issue.Message
+                    Content = ContentProvider.GetContent(issue)
                 };
 
                 if (!this.AddThreadProperties(newThread, changes, issue, iterationId, commentSource))
@@ -398,6 +414,10 @@
 
             // Add a custom property to be able to distinguish all comments created this way.
             thread.SetCommentSource(commentSource);
+
+            // Add a custom property to be able to return issue message from existing threads,
+            // without any formatting done by this addin, back to Cake.Prca.
+            thread.SetIssueMessage(issue.Message);
 
             return true;
         }

@@ -12,7 +12,7 @@
         /// <returns>Credentials for integrated / NTLM authentication.</returns>
         public static IPrcaCredentials AuthenticationNtlm()
         {
-            return new PrcaNtlmCredentials();
+            return new TfsNtlmCredentials();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@
             userName.NotNullOrWhiteSpace(nameof(userName));
             password.NotNullOrWhiteSpace(nameof(password));
 
-            return new PrcaBasicCredentials(userName, password);
+            return new TfsBasicCredentials(userName, password);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@
         {
             personalAccessToken.NotNullOrWhiteSpace(nameof(personalAccessToken));
 
-            return new PrcaBasicCredentials(string.Empty, personalAccessToken);
+            return new TfsBasicCredentials(string.Empty, personalAccessToken);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
         {
             accessToken.NotNullOrWhiteSpace(nameof(accessToken));
 
-            return new PrcaOAuthCredentials(accessToken);
+            return new TfsOAuthCredentials(accessToken);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@
             userName.NotNullOrWhiteSpace(nameof(userName));
             password.NotNullOrWhiteSpace(nameof(password));
 
-            return new PrcaAadCredentials(userName, password);
+            return new TfsAadCredentials(userName, password);
         }
     }
 }

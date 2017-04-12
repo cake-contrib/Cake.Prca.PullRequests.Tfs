@@ -16,7 +16,7 @@
             public void Should_Set_User_Name(string userName)
             {
                 // When
-                var credentials = new PrcaAadCredentials(userName, "bar");
+                var credentials = new TfsAadCredentials(userName, "bar");
 
                 // Then
                 credentials.UserName.ShouldBe(userName);
@@ -30,7 +30,7 @@
             public void Should_Set_Password_Name(string password)
             {
                 // When
-                var credentials = new PrcaAadCredentials("foo", password);
+                var credentials = new TfsAadCredentials("foo", password);
 
                 // Then
                 credentials.Password.ShouldBe(password);

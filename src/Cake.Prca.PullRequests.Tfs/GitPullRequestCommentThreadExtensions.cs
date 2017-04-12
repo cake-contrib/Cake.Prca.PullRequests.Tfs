@@ -10,7 +10,8 @@
     /// </summary>
     internal static class GitPullRequestCommentThreadExtensions
     {
-        private const string CommentSourcePropertyName = "CommentSource";
+        private const string CommentSourcePropertyName = "CakePrcaCommentSource";
+        private const string IssueMessagePropertyName = "CakePrcaIssueMessage";
 
         /// <summary>
         /// Converts a <see cref="GitPullRequestCommentThread"/> from TFS to a <see cref="IPrcaDiscussionThread"/> as used in this addin.
@@ -52,19 +53,7 @@
         {
             thread.NotNull(nameof(thread));
 
-            if (thread.Properties == null)
-            {
-                throw new InvalidOperationException("Properties collection is not created.");
-            }
-
-            if (thread.Properties.ContainsKey(CommentSourcePropertyName))
-            {
-                thread.Properties[CommentSourcePropertyName] = value;
-            }
-            else
-            {
-                thread.Properties.Add(CommentSourcePropertyName, value);
-            }
+            thread.SetValue(CommentSourcePropertyName, value);
         }
 
         /// <summary>
@@ -79,6 +68,58 @@
             thread.NotNull(nameof(thread));
 
             return thread.GetCommentSource() == value;
+        }
+
+        /// <summary>
+        /// Gets the original message of the issue as provided by Cake.Prca,
+        /// without any formatting done by this addin.
+        /// </summary>
+        /// <param name="thread">Thread to get the value from.</param>
+        /// <returns>Original message of the issue.</returns>
+        public static string GetIssueMessage(this GitPullRequestCommentThread thread)
+        {
+            thread.NotNull(nameof(thread));
+
+            return thread.Properties.GetValue(IssueMessagePropertyName, string.Empty);
+        }
+
+        /// <summary>
+        /// Sets the original message of the issue as provided by Cake.Prca.
+        /// </summary>
+        /// <param name="thread">Thread for which the value should be set.</param>
+        /// <param name="value">Value to set as the original message.</param>
+        public static void SetIssueMessage(this GitPullRequestCommentThread thread, string value)
+        {
+            thread.NotNull(nameof(thread));
+
+            thread.SetValue(IssueMessagePropertyName, value);
+        }
+
+        /// <summary>
+        /// Sets a value in the thread properties.
+        /// </summary>
+        /// <typeparam name="T">Type of the value.</typeparam>
+        /// <param name="thread">Thread for which the value should be set.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="value">Value to set.</param>
+        private static void SetValue<T>(this GitPullRequestCommentThread thread, string propertyName, T value)
+        {
+            thread.NotNull(nameof(thread));
+            propertyName.NotNullOrWhiteSpace(nameof(propertyName));
+
+            if (thread.Properties == null)
+            {
+                throw new InvalidOperationException("Properties collection is not created.");
+            }
+
+            if (thread.Properties.ContainsKey(propertyName))
+            {
+                thread.Properties[propertyName] = value;
+            }
+            else
+            {
+                thread.Properties.Add(propertyName, value);
+            }
         }
     }
 }

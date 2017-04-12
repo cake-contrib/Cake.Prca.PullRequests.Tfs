@@ -21,19 +21,19 @@
 
             switch (credentials.GetType().Name)
             {
-                case nameof(PrcaNtlmCredentials):
+                case nameof(TfsNtlmCredentials):
                     return new VssCredentials();
 
-                case nameof(PrcaBasicCredentials):
-                    var basicCredentials = (PrcaBasicCredentials)credentials;
+                case nameof(TfsBasicCredentials):
+                    var basicCredentials = (TfsBasicCredentials)credentials;
                     return new VssBasicCredential(basicCredentials.UserName, basicCredentials.Password);
 
-                case nameof(PrcaOAuthCredentials):
-                    var oAuthCredentials = (PrcaOAuthCredentials)credentials;
+                case nameof(TfsOAuthCredentials):
+                    var oAuthCredentials = (TfsOAuthCredentials)credentials;
                     return new VssOAuthAccessTokenCredential(oAuthCredentials.AccessToken);
 
-                case nameof(PrcaAadCredentials):
-                    var aadCredentials = (PrcaAadCredentials)credentials;
+                case nameof(TfsAadCredentials):
+                    var aadCredentials = (TfsAadCredentials)credentials;
                     return new VssAadCredential(aadCredentials.UserName, aadCredentials.Password);
 
                 default:

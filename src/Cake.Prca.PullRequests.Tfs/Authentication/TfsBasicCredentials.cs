@@ -3,14 +3,14 @@
     /// <summary>
     /// Credentials for basic authentication.
     /// </summary>
-    public class PrcaBasicCredentials : IPrcaCredentials
+    public class TfsBasicCredentials : IPrcaCredentials
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PrcaBasicCredentials"/> class.
+        /// Initializes a new instance of the <see cref="TfsBasicCredentials"/> class.
         /// </summary>
         /// <param name="userName">User name.</param>
         /// <param name="password">Password.</param>
-        public PrcaBasicCredentials(string userName, string password)
+        public TfsBasicCredentials(string userName, string password)
         {
             this.UserName = userName;
             this.Password = password;

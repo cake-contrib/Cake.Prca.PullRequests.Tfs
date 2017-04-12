@@ -39,6 +39,10 @@
       <HintPath>..\packages\Cake.Core.0.16.2\lib\net45\Cake.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Cake.Prca, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cake.Prca.0.3.0\lib\net45\Cake.Prca.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Cake.Testing, Version=0.16.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Cake.Testing.0.16.2\lib\net45\Cake.Testing.dll</HintPath>
       <Private>True</Private>
@@ -78,9 +82,9 @@
     <Compile Include="Authentication\PrcaNtlmCredentialsTests.cs" />
     <Compile Include="Authentication\PrcaOAuthCredentialsTests.cs" />
     <Compile Include="Authentication\PrcaBasicCredentialsTests.cs" />
+    <Compile Include="ContentProviderTests.cs" />
     <Compile Include="ExceptionAssertExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepositoryDescriptionTests.cs" />
     <Compile Include="TfsPullRequestSettingsTests.cs" />
   </ItemGroup>
   <ItemGroup>
