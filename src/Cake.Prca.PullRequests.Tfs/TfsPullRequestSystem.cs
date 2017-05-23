@@ -14,7 +14,7 @@
     /// <summary>
     /// Class for writing issues to Team Foundation Server or Visual Studio Team Services pull requests.
     /// </summary>
-    public sealed class TfsPullRequestSystem : PullRequestSystem
+    internal sealed class TfsPullRequestSystem : PullRequestSystem
     {
         private readonly TfsPullRequestSettings settings;
         private readonly RepositoryDescription repositoryDescription;
