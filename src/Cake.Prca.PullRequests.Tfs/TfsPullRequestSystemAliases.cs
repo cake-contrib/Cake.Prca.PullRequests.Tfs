@@ -10,7 +10,6 @@
     /// Visual Studio Team Services pull requests.
     /// </summary>
     [CakeAliasCategory(CakeAliasConstants.MainCakeAliasCategory)]
-    [CakeNamespaceImport("Cake.Prca.PullRequests.Tfs")]
     public static class TfsPullRequestSystemAliases
     {
         /// <summary>
