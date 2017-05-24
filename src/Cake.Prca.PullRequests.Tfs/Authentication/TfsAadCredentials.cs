@@ -3,7 +3,7 @@
     /// <summary>
     /// Credentials for authentication with an Azure Active Directory.
     /// </summary>
-    public class TfsAadCredentials : TfsBasicCredentials
+    internal class TfsAadCredentials : TfsBasicCredentials
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TfsAadCredentials"/> class.

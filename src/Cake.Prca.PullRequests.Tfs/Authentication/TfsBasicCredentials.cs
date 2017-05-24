@@ -3,7 +3,7 @@
     /// <summary>
     /// Credentials for basic authentication.
     /// </summary>
-    public class TfsBasicCredentials : IPrcaCredentials
+    internal class TfsBasicCredentials : IPrcaCredentials
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TfsBasicCredentials"/> class.
