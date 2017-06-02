@@ -7,7 +7,9 @@
     using Core.Diagnostics;
     using Core.IO;
     using Issues;
+    using Microsoft.TeamFoundation.Core.WebApi;
     using Microsoft.TeamFoundation.SourceControl.WebApi;
+    using Microsoft.VisualStudio.Services.Identity;
     using Microsoft.VisualStudio.Services.WebApi;
     using TfsUrlParser;
 
@@ -42,8 +44,14 @@
                 this.repositoryDescription.ProjectName,
                 this.repositoryDescription.RepositoryName);
 
-            using (var gitClient = this.CreateGitClient())
+            Identity authorizedIdenity;
+            using (var gitClient = this.CreateGitClient(out authorizedIdenity))
             {
+               this.Log.Verbose(
+                    "Authorized Identity:\n  Id: {0}\n  DisplayName: {1}",
+                    authorizedIdenity.Id,
+                    authorizedIdenity.DisplayName);
+
                 if (settings.PullRequestId.HasValue)
                 {
                     this.Log.Verbose("Read pull request with ID {0}", settings.PullRequestId.Value);
@@ -96,6 +104,34 @@
                 this.pullRequest.Repository.Id,
                 this.pullRequest.Repository.Name,
                 this.pullRequest.SourceRefName);
+        }
+
+        /// <summary>
+        /// Votes for the pullrequest.
+        /// </summary>
+        /// <param name="vote">The vote for the pull request.</param>
+        public void Vote(TfsPullRequestVote vote)
+        {
+            if (!this.ValidatePullRequest())
+            {
+                return;
+            }
+
+            Identity authorizedIdenity;
+            using (var gitClient = this.CreateGitClient(out authorizedIdenity))
+            {
+                var request =
+                    gitClient.CreatePullRequestReviewerAsync(
+                        new IdentityRefWithVote() { Vote = (short)vote },
+                        this.pullRequest.Repository.Id,
+                        this.pullRequest.PullRequestId,
+                        authorizedIdenity.Id.ToString(),
+                        CancellationToken.None);
+
+                var createdReviewer = request.Result;
+                var createdVote = (TfsPullRequestVote)createdReviewer.Vote;
+                this.Log.Verbose("Voted for pull request with '{0}'.", createdVote.ToString());
+            }
         }
 
         /// <inheritdoc/>
@@ -306,12 +342,14 @@
             return false;
         }
 
-        private GitHttpClient CreateGitClient()
+        private GitHttpClient CreateGitClient(out Identity authorizedIdentity)
         {
             var connection =
                 new VssConnection(
                     this.repositoryDescription.CollectionUrl,
                     this.settings.Credentials.ToVssCredentials());
+
+            authorizedIdentity = connection.AuthorizedIdentity;
 
             var gitClient = connection.GetClient<GitHttpClient>();
             if (gitClient == null)
@@ -320,6 +358,12 @@
             }
 
             return gitClient;
+        }
+
+        private GitHttpClient CreateGitClient()
+        {
+            Identity identity;
+            return this.CreateGitClient(out identity);
         }
 
         private IEnumerable<GitPullRequestCommentThread> CreateDiscussionThreads(
