@@ -168,6 +168,7 @@
     <Compile Include="TfsPullRequestSettings.cs" />
     <Compile Include="TfsPullRequestSystem.cs" />
     <Compile Include="TfsPullRequestSystemAliases.cs" />
+    <Compile Include="TfsPullRequestVote.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
