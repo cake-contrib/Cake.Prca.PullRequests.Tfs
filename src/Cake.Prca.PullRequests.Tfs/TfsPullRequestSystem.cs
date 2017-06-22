@@ -135,6 +135,13 @@
         }
 
         /// <inheritdoc/>
+        public override bool Initialize(ReportIssuesToPullRequestSettings settings)
+        {
+            // Fail initialization if no pull request could be found.
+            return base.Initialize(settings) && this.pullRequest != null;
+        }
+
+        /// <inheritdoc/>
         public override PrcaCommentFormat GetPreferredCommentFormat()
         {
             return PrcaCommentFormat.Markdown;
