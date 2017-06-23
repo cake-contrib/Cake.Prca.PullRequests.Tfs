@@ -128,7 +128,7 @@
         /// <code>
         /// <![CDATA[
         ///     var repoRoot = new DirectoryPath("c:\repo");
-        ///     ReportCodeAnalysisIssuesToPullRequest(
+        ///     ReportIssuesToPullRequest(
         ///         MsBuildCodeAnalysis(
         ///             @"C:\build\msbuild.log",
         ///             MsBuildXmlFileLoggerFormat),
@@ -174,7 +174,7 @@
         /// <code>
         /// <![CDATA[
         ///     var repoRoot = new DirectoryPath("c:\repo");
-        ///     ReportCodeAnalysisIssuesToPullRequest(
+        ///     ReportIssuesToPullRequest(
         ///         MsBuildCodeAnalysis(
         ///             @"C:\build\msbuild.log",
         ///             MsBuildXmlFileLoggerFormat),
